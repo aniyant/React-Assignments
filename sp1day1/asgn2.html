@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>JSX and Babel</title>
+  </head>
+  <body>
+    <div id="div">
+        <input type="text" id="name" placeholder="your name" required>
+        <input type="text" id="day" placeholder="type true or false" required>
+        <button onclick="submit()">submit</button>
+        <div id="root">
+
+        </div>
+    </div>
+    <script src="https://unpkg.com/react@18.2.0/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script type="text/babel">
+      // Your JSX code here
+     
+      let root = ReactDOM.createRoot(document.getElementById("root"));
+      
+      function submit(e){
+        let name = document.getElementById("name").value;
+        let day = document.getElementById("day").value;
+        console.log(day);
+        console.log(Boolean(day));
+        let p1 = <p>Hello {name}, {day} sieze the day</p>
+        let p2 = <p>Hello {name}, {day} don't sieze the day</p>
+        
+        if(day === "true"){
+            root.render(p1);
+        }
+        else{
+            root.render(p2);
+        }
+      }
+    
+    </script>
+  </body>
+</html>

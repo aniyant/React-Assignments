@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>JSX and Babel</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script src="https://unpkg.com/react@18.2.0/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script type="text/babel">
+      // Your JSX code here
+      let obj = {
+        image:"https://citizenwatch.widen.net/content/ez3z1s2bf6/png/Series8+890.png?u=41zuoe&width=500&height=625&quality=80&crop=false&keep=c&color=FFFFFF00",
+        title:"Automatic Watch",
+        price:350.00,
+        desc1:"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus consectetur magna quis malesuada ornare. Curabitur tincidunt velit sed sem dignissim, nec bibendum elit mattis.",
+        desc2:"Suspendisse dictum interdum neque, nec dapibus sem accumsan sed. Ut ullamcorper nunc eget tortor fermentum molestie.",
+
+        features:['Chronograph','Master chronometer certifie','Tachymeter','Anti-magnetic','Chronometer','Small seconds'],
+
+        Product_Details:{
+            Between_lugs:"20 mm",
+            Bracelet:"leather strap",
+            Case:"Steel",
+            Case_diameter:"42 mm",
+            Dial_color:"Black",
+            Crystal:"Domed, scratch-resistant sapphire crystal with anti-reflective treatment inside",
+            Water_resistance:"5 bar (50 meters /167 feet)"
+        }
+      }
+      function dynamicFeatures(arr,start,end){
+        for(let i=start;i<end;i++){
+            return <p>{arr[i]}</p>
+        }
+      }
+      function dynamicProducts(obj){
+        for(let x in obj){
+            if(x.includes("_")){
+                let key = x.split("_").join(" ");
+            }
+            else{
+                let key = x;
+            }
+            return <p><span class="product-details-key">{x}:</span><span class="product-details-value">{obj.x}</span></p>
+        }
+      }
+
+    function component(obj){
+        return <>
+                <img src={obj.image} class="watch-image"/>
+                <h2 class="title">{obj.title}</h2>
+                <p class="price">{obj.price}</p>
+                <p class="desc1">{obj.desc1}</p>
+                <p class="desc2">{obj.desc2}</p>
+                <div class="features">
+                    <h3>Features</h3>
+                    <div class="features-data" style={{display:"flex"}}>
+                    <div>{dynamicFeatures(obj.features,0,Math.ceil(obj.features.length/2))}</div>
+                    <div>{dynamicFeatures(obj.features,Math.ceil(obj.features.length/2),obj.features.length)}</div> 
+                    </div>   
+                </div>
+                <div>
+                    <h2>Product Details</h2>
+                    <div>{dynamicProducts(obj.Product_Details)}</div>
+                </div>
+        </>
+    }
+
+    let root = ReactDOM.createRoot(document.getElementById("root"));
+    root.render(component(obj));
+    </script>
+  </body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>JSX and Babel</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script src="https://unpkg.com/react@18.2.0/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script type="text/babel">
+      // Your JSX code here
+      function SubscribeAlert(e){
+        let email = document.getElementById("email").value;
+        if(email.length > 4 && email.includes("@")){
+            alert("Subcribed!");
+        }
+        else{
+            alert("Please fill email input correctly.");
+        }
+      }
+      let email = <>
+                <div style={{height:"500px",width:"500px",margin:"auto", backgroundImage:"url('https://www.getvero.com/assets/images/blog/DFn_D1thgU-400.webp')",backgroundPosition:"center", backgroundSize:"cover" ,backgroundRepeat:"no-repeat"}}>
+                    <div style={{textAlign:"center",alignContent:"center"}}>
+                        <h2 style={{marginTop:"300px"}}>SUBSCRIBE</h2>
+                        <p>Subscribe to our newsletter & stay up to date</p>
+                        <input type="email" id="email" name="email" placeholder="john@de.net"style={{ height:"30px", fontSize:"16px",borderRadius:"20px",backgroundColor:"#edf2f6"}} required/>
+                        <button type="submit" onClick={()=>SubscribeAlert()} style={{height:"30px",backgroundColor:"#4298e1",color:"white",borderRadius:"20px"}}>Subscribe</button>
+                    </div>
+                </div>
+                </>
+
+      let root = ReactDOM.createRoot(document.getElementById("root"));
+      root.render(email);
+    </script>
+  </body>
+</html>
