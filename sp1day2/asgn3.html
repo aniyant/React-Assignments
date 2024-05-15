@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>React Template</title>
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+  <script src="https://www.unpkg.com/react@18.2.0/umd/react.development.js"></script>
+  <script src="https://www.unpkg.com/react-dom@18.2.0/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script type="text/babel">
+    // Your task starts here
+    let Gallary = ({children})=>{
+        console.log(children);
+        return <div>{children}</div>
+    }
+    let Images =({urls})=>{
+        if(urls.length==0){
+            return <p>No image</p>
+        }
+        let all = [];
+        // for(let i=0;i<urls.length;i++){
+        //     all.push(<img key={i} src={urls[i]}/>);
+        // }
+        urls.forEach((element,index) => {
+            all.push(<img key={index} src={element}/>)
+        });
+
+        // return <img src={url}/>
+        return all;
+    }
+    let urls = ["https://www.getvero.com/assets/images/blog/DFn_D1thgU-400.webp","https://www.getvero.com/assets/images/blog/DFn_D1thgU-400.webp","https://www.getvero.com/assets/images/blog/DFn_D1thgU-400.webp","https://www.getvero.com/assets/images/blog/DFn_D1thgU-400.webp"]
+let reactRoot = ReactDOM.createRoot(document.getElementById("root"));
+reactRoot.render(
+    <Gallary>
+      <Images urls={urls}/>
+    </Gallary>
+);
+
+</script>
+</html>

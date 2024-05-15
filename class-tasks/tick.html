@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Clock with JS / DOM</title>
+</head>
+<body>
+    <div>
+        <h1>How is today going ???</h1>
+    </div>
+    <div id="root"></div>
+    <script>
+        let rootElement = document.getElementById("root")
+        function tick() {
+            const time = new Date().toLocaleTimeString()
+            rootElement.innerHTML = `
+                <h1>Digital Clock With vanilla javascript</h1>
+                <input type="text"  />
+                <h2>${time}</h2>
+            `
+        }
+        setInterval(tick, 1000)
+    </script>
+</body>
+</html>

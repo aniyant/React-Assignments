@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Components in React</title>
+</head>
+<body>
+  <div id="root"></div>
+  <script src="https://www.unpkg.com/react@18.2.0/umd/react.development.js"></script>
+  <script src="https://www.unpkg.com/react-dom@18.2.0/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script type="text/babel">
+    // Write your code here
+    let data = [{
+        id:1,
+        heading:"Find Your Template",
+        content:"Every template is embedded within an ifram you can easily click , so you they like and test the responsieve behaviour."
+    },
+    {
+        id:2,
+        heading:"Find Your Template",
+        content:"Every template is embedded within an ifram you can easily click , so you they like and test the responsieve behaviour."
+    },
+    {
+        id:3,
+        heading:"Find Your Template",
+        content:"Every template is embedded within an ifram you can easily click , so you they like and test the responsieve behaviour."
+    },
+];
+    let PageHeading = ({content1,content2})=>{
+        return <h1 style={{textAlign:"center"}}>{content1}<span className="phead-color" style={{color:"#47bc79"}}>{content2}</span></h1>
+    }
+    let CardNumber = ({id})=>{
+        return <p><span style={{
+            backgroundColor:"#c7f6d6",
+            padding:"10px",
+            borderRadius:"10px",
+            fontSize:"20px"
+        }}>{id<10? "0"+id:id}</span></p>
+    }
+    let CardHeading = ({heading})=>{
+        return <h2>{heading}</h2>
+    }
+    let Paragraph = ({content})=>{
+        return <p>{content}</p>
+    }
+    let Card = ({obj})  =>{
+        return (
+            <div className="card" style={{textAlign:"center"}}>
+                <CardNumber id={obj.id}/>
+                <CardHeading heading={obj.heading}/>
+                <Paragraph content={obj.content} />
+            </div>
+        )
+    }
+    let RenderCards = ({data})=>{
+        return (<div className="cardlist" style={{
+            display:"flex",
+            gap:"20px",
+            justifyContent:"center"
+        }}>
+                {
+                    data.map((element)=>{
+                        return <Card key={element.id} obj={element}/>
+                    })
+                }
+            </div>)
+    }
+    let PageLayout = ({children})=>{
+        return <div className="container" style={{
+            backgroundColor:"#f9fafc",
+            maxWidth:"1320px",
+            margin:"auto",
+            padding:"100px"
+        }}>{children}</div>
+    }
+    let root = ReactDOM.createRoot(document.getElementById("root"));
+    root.render(
+        <PageLayout>
+            <PageHeading content1="Getting Started in " content2="3 Simple Steps."/>
+            <RenderCards data={data}/>
+        </PageLayout>
+    )
+  </script>
+
+</body>
+</html>
