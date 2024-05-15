@@ -30,21 +30,18 @@
             Water_resistance:"5 bar (50 meters /167 feet)"
         }
       }
-      function dynamicFeatures(arr,start,end){
-        for(let i=start;i<end;i++){
-            return <p>{arr[i]}</p>
-        }
+      function dynamicFeatures(features){
+        return <p>{features}</p>
       }
-      function dynamicProducts(obj){
-        for(let x in obj){
-            if(x.includes("_")){
-                let key = x.split("_").join(" ");
-            }
-            else{
-                let key = x;
-            }
-            return <p><span class="product-details-key">{x}:</span><span class="product-details-value">{obj.x}</span></p>
-        }
+      function dynamicProducts(detail){
+        // for(let x in obj){
+            // if(detail.includes("_")){
+            //     let key = x.split("_").join(" ");
+            // }
+            // else{
+            //     let key = x;
+            // }
+            return <span class="product-details-value">{detail}</span>
       }
 
     function component(obj){
@@ -57,13 +54,28 @@
                 <div class="features">
                     <h3>Features</h3>
                     <div class="features-data" style={{display:"flex"}}>
-                    <div>{dynamicFeatures(obj.features,0,Math.ceil(obj.features.length/2))}</div>
-                    <div>{dynamicFeatures(obj.features,Math.ceil(obj.features.length/2),obj.features.length)}</div> 
+                      <div>
+                    <div>{dynamicFeatures(obj.features[0])}</div>
+                    <div>{dynamicFeatures(obj.features[1])}</div>
+                    <div>{dynamicFeatures(obj.features[2])}</div>
+                    </div>
+                    <div>
+                    <div>{dynamicFeatures(obj.features[3])}</div>
+                    
+                    <div>{dynamicFeatures(obj.features[4])}</div>
+                    <div>{dynamicFeatures(obj.features[5])}</div>
+                    </div>
+
                     </div>   
                 </div>
                 <div>
                     <h2>Product Details</h2>
-                    <div>{dynamicProducts(obj.Product_Details)}</div>
+                    <div>Between lugs: {dynamicProducts(obj.Product_Details.Between_lugs)}</div>
+                    <div>Bracelet: {dynamicProducts(obj.Product_Details.Bracelet)}</div>
+                    <div>Case: {dynamicProducts(obj.Product_Details.Case)}</div>
+                    <div>Case_diameter: {dynamicProducts(obj.Product_Details.Case_diameter)}</div>
+                    <div>Crystal: {dynamicProducts(obj.Product_Details.Crystal)}</div>
+                    <div>Dial_color: {dynamicProducts(obj.Product_Details.Dial_color)}</div>
                 </div>
         </>
     }

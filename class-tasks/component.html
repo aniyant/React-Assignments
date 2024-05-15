@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>JSX and Babel</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script src="https://unpkg.com/react@18.2.0/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script type="text/babel">
+      // Your JSX code here
+      let Nav = ()=>{
+        return <nav>
+            <span>link1</span>
+            <span>link2</span>
+            <span>link3</span>
+            </nav>
+      }
+      let Main = ()=>{
+        return <main>
+            <ArticleList title={"Global Warming"} content={"Deforestation and industrialization is one of the main cause."}/>
+            </main>
+      }
+      let ArticleList = ({title,content})=>{
+        return <article>
+                <h1>{title}</h1>
+                <p>{content}</p>
+                </article>
+      }
+      let Footer = ()=>{
+        return <footer>
+            <p>This is the footer</p>
+            </footer>
+      }
+
+      let App = () => {
+        return <>
+            <Nav/>
+            <Main/>
+            <Footer/>
+        </>
+
+      }
+      let root = ReactDOM.createRoot(document.getElementById("root"));
+      root.render(<App/>);
+    </script>
+  </body>
+</html>
