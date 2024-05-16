@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Template</title>
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+  <script src="https://www.unpkg.com/react@18.2.0/umd/react.development.js"></script>
+  <script src="https://www.unpkg.com/react-dom@18.2.0/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script type="text/babel">
+    // Your  code will go here
+    let Title = ({title}) => {
+        return <h1>{title}</h1>
+    }
+
+    let ColorPicker = () => {
+        let [input,setInput] = React.useState("");
+        // console.log(input);
+        let handleInput = (e) => {
+            if(e.target.value[0] !== '#'){
+                setInput("#"+e.target.value);
+            }
+            else{
+                setInput(e.target.value);
+            }
+        }
+
+        return (
+            <>
+            <input type="text" style={{width:"200px",height:"30px",borderRadius:"10px"}} onChange={handleInput} placeholder="Type Color In HEX Format" />
+            <ShowColor input={input}/>
+            </>
+        )
+    }
+    let ShowColor = ({input}) => {
+        function isHexColor(hex) {
+        // Check if the string is a valid hex color.
+        const regex = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/;
+        return regex.test(hex);
+        }
+
+        // console.log("showColor:"+input);
+        if(isHexColor(input)){
+            return <div style={{height:"200px",width:"200px",backgroundColor:input,borderRadius:"10px",marginTop:"10px"}}></div>
+        }
+        else if(input.length==0){
+            return <div style={{height:"200px",width:"200px", padding:"10px",borderRadius:"10px",textAlign:"center"}}>No Value Hex Povided Yet.</div>
+        }
+        return <div style={{height:"200px",width:"200px", padding:"10px",borderRadius:"10px",textAlign:"center"}}>Not a Valid Input.</div>
+    }
+
+    let App = () => {
+        return (
+            <>
+            <Title title="Color Picker"/>
+            <ColorPicker />
+            </>
+        )
+
+    }
+
+    let root = ReactDOM.createRoot(document.getElementById("root"));
+    root.render(<App/>)
+  </script>
+</html>

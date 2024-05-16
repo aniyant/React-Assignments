@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>React</title>
+</head>
+<body>
+    <div>
+        <h1>Tick using React</h1>
+    </div>
+    <div id="root"></div>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://www.unpkg.com/react@18.2.0/umd/react.production.min.js"></script>
+    <script src="https://www.unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js"></script>
+    <script type="text/babel">
+        let data = [
+            {id:1,description:"this is description"},
+            {id:2,description:"this is description"},
+            {id:3,description:"this is description"},
+            {id:4,description:"this is description"},
+            {id:5,description:"this is description"},
+        ];
+        let [items,setData] = React.useState(data);
+
+        let element = function () {
+            
+        }
+        const rootElement = document.getElementById("root")
+        const reactRoot = ReactDOM.createRoot(rootElement)
+        reactRoot.render(element)
+    </script>
+</body>
+</html>
