@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Template</title>
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+  <script src="https://www.unpkg.com/react@18.2.0/umd/react.development.js"></script>
+  <script src="https://www.unpkg.com/react-dom@18.2.0/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script type="text/babel">
+    // Your  code will go here
+    let InputHobby = () => {
+        let [input,setInput] = React.useState(["",])
+        
+        let removeInput = (e,id) => {
+            let updatedArr = [...input];
+            updatedArr.splice(id,1)
+            setInput(updatedArr);
+        }
+
+        let changeInput = (e,id) => {
+            // console.log(e);
+            // console.log(id)
+            let updatedArr = [...input];
+            updatedArr[id] = e.target.value
+            setInput(updatedArr);
+        }
+
+        if(input.length === 1){
+            return (
+                <>
+                <input type="text" onChange={(e)=>{changeInput(e,0)}} value={input[0]} />
+                <AddButton input={input} setInput={setInput}/>
+                </>
+            )
+        }
+        
+        return (
+            <>
+                {
+                 input.map((element,index) => {
+                    return (
+                        <>
+                        <div>
+                            <input type="text"  onChange={(e) => changeInput(e,index)} value={element}/>
+                            <button onClick={(e) => removeInput(e,index)}>Remove</button>
+                        </div>
+                        </>
+                    )
+                 })
+                }
+                <AddButton input={input} setInput={setInput}/>
+            </>
+        )
+    }
+
+    let AddButton = ({input,setInput}) => {
+        let AddInput = (e) => {
+            if(input[input.length-1]){
+                setInput((prev) => [...prev,""])
+            }else{
+                alert("please fill the current box first then click add")
+            }
+        }
+        let submit = () => {
+            console.log(input);
+        }
+
+        return <div><button onClick={AddInput}>Add</button><button onClick={submit}>submit</button></div>
+    }
+
+    let App = () => {
+        return <InputHobby/>
+    }
+
+    let root = ReactDOM.createRoot(document.getElementById("root"));
+    root.render(<App/>)
+  </script>
+</html>
