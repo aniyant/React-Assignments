@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Forms in React with Server Interaction</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script src="https://www.unpkg.com/react@18.2.0/umd/react.development.js"></script>
+    <script src="https://www.unpkg.com/react-dom@18.2.0/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script type="text/babel">
+      function App() {
+        const [tasks, setTasks] = React.useState([]);
+        const [formState, setFormState] = React.useState({
+          title: "",
+          completed: false,
+          assignedTo: "",
+        });
+        const [loading, setLoading] = React.useState(false);
+        const [error, setError] = React.useState(false);
+
+        function handleChange(event) {
+          const value =
+            event.target.type === "checkbox"
+              ? event.target.checked
+              : event.target.value;
+          setFormState({
+            ...formState,
+            [event.target.name]: value,
+          });
+        }
+
+        function handleSubmit(event) {
+          event.preventDefault();
+          setLoading(true);
+          axios
+            .post("http://localhost:8080/tasks", formState)
+            .then((response) => {
+              // Fetch tasks again to refresh the list
+              fetchTasks();
+              setFormState({ title: "", completed: false, assignedTo: "" });
+            })
+            .catch((error) => {
+              console.error("There was an error!", error);
+              setError(false);
+            })
+            .finally(() => {
+              setLoading(false);
+            });
+        }
+
+        // Function to fetch tasks from the server
+        function fetchTasks() {
+          setLoading(true);
+          axios
+            .get("http://localhost:8080/tasks")
+            .then((response) => {
+              setTasks(response.data);
+              setError(false); // Clear any previous errors
+            })
+            .catch((error) => {
+              console.error("There was an error fetching the tasks", error);
+              setError(false);
+            })
+            .finally(() => {
+              setLoading(false);
+            });
+        }
+
+        // Update task completion status
+        function updateTask(id, updatedFields) {
+          setLoading(true);
+          axios
+            .put(`http://localhost:8080/tasks/${id}`, updatedFields)
+            .then((response) => {
+              fetchTasks(); // Refresh the tasks list
+            })
+            .catch((error) => {
+              console.error("There was an error updating the task", error);
+              setError(false);
+            })
+            .finally(() => {
+              setLoading(false);
+            });
+        }
+
+        // Delete a task
+        function deleteTask(id) {
+          setLoading(true);
+          axios
+            .delete(`http://localhost:8080/tasks/${id}`)
+            .then(() => {
+              fetchTasks(); // Refresh the tasks list
+            })
+            .catch((error) => {
+              console.error("There was an error deleting the task", error);
+              setError(false);
+            })
+            .finally(() => {
+              setLoading(false);
+            });
+        }
+
+        return (
+          <>
+            <button onClick={fetchTasks} disabled={loading}>
+              Get Tasks
+            </button>
+            {error && <p style={{ color: "red" }}>Something went wrong</p>}
+            <form onSubmit={handleSubmit}>
+              <input
+                name="title"
+                placeholder="Add new task"
+                onChange={handleChange}
+                value={formState.title}
+              />
+              <br />
+              <br />
+              <label>
+                Completion Status
+                <input
+                  name="completed"
+                  type="checkbox"
+                  checked={formState.completed}
+                  onChange={handleChange}
+                />
+              </label>
+              <br />
+              <br />
+              <select
+                name="assignedTo"
+                onChange={handleChange}
+                value={formState.assignedTo}
+              >
+                <option value="">Assign Task to</option>
+                <option value="Amar">Amar</option>
+                <option value="Akbar">Akbar</option>
+                <option value="Anthony">Anthony</option>
+              </select>
+              <br />
+              <br />
+              <button type="submit" disabled={loading}>
+                Add New Task
+              </button>
+            </form>
+            <br />
+            {loading ? (
+              <p>Loading tasks...</p>
+            ) : (
+              tasks.map((task) => (
+                <div key={task.id}>
+                  <span>{task.title}</span>
+                  <input
+                    type="checkbox"
+                    checked={task.completed}
+                    onChange={() =>
+                      updateTask(task.id, { completed: !task.completed })
+                    }
+                  />
+                  <button onClick={() => deleteTask(task.id)}>Delete</button>
+                </div>
+              ))
+            )}
+          </>
+        );
+      }
+
+      ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+    </script>
+  </body>
+</html>

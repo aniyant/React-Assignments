@@ -12,23 +12,31 @@
     <script src="https://www.unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js"></script>
     <script type="text/babel">
         
-        let element = ()=>{
-            let [count,setCount] = React.useState(0);
+        function App() {
+            let [count, setCount] = React.useState(0);
 
-            let handleCount = function(e){
-                setCount(count++);
+            let handleIncrement = () => {
+                // await setCount(count + 1);
+                // await setCount(count + 1);
+                // await setCount(count + 1);
+                // await setCount(count + 1);
+                setCount((prevCount) => prevCount + 1);
+                setCount((prevCount) => prevCount + 1);
+                setCount((prevCount) => prevCount + 1);
+            
+                console.log(count);
+            };
+
+            return (
+                <div>
+                <h2>{count}</h2>
+                <button onClick={handleIncrement}>+</button>
+                </div>
+            );
             }
-            return element(
-                <>
-                    <h1>Digital Counter With React</h1>
-                    <h2>Count:{count}</h2>
-                    <button onClick={handleCount}>Increase Count</button>
-                </>
-            )
-        }
-        const rootElement = document.getElementById("root")
-        const reactRoot = ReactDOM.createRoot(rootElement)
-        reactRoot.render(element)
+
+        const root = ReactDOM.createRoot(document.getElementById("root"));
+        root.render(<App />);
     </script>
 </body>
 </html>

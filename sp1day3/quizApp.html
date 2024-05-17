@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Template</title>
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+  <script src="https://www.unpkg.com/react@18.2.0/umd/react.development.js"></script>
+  <script src="https://www.unpkg.com/react-dom@18.2.0/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <!-- <script src="../Quiz.js" ></script> -->
+  <script type="text/babel">
+    // Your  code will go here
+    // Quiz as Q from 'Quiz'
+    let Welcome = ({title}) => {
+        return <h1>{title}</h1>
+    }
+
+    let Quiz = () => {
+        const [questions,setQuestions] = React.useState([
+            {
+                id:1,
+                question:"What is React ?",
+                options:["React is a javacript library used for building ui based on components.",
+                        "React is not a library",
+                        "I don't know",
+                        "All of the above"
+                        ],
+                rightAns:"React is a javacript library used for building ui based on components."
+            },
+            {
+                id:2,
+                question:"What is useState?",
+                options:["useState is a javacript library components.",
+                        "React is not a library",
+                        "useState is React Hook which contains the current data with is being used to render DOM.",
+                        "All of the above"
+                        ],
+                rightAns:"useState is React Hook which contains the current data with is being used to render DOM."
+            },
+            {
+                id:3,
+                question:"What is component ?",
+                options:["Component is reusable piece of code which returns html elements.",
+                        "it is not a library",
+                        "React dom render DOM.",
+                        "All of the above"
+                        ],
+                rightAns:"Component is reusable piece of code which returns html elements."
+            }
+        ]
+    )
+            
+        let [ans,setAns] = React.useState([]);
+
+        let handleAns = (e) => {
+
+            // let ans = questions.filter((element) => {
+            //             return Boolean(element.id === e.target.value &&  element.rightAns === e.target.value);
+            //         })
+            let updatedAns = {
+               ...ans,
+                [e.target.name]:ans[e.target.name]===e.target.value?0:e.target.value,
+            }
+            setAns(ans);
+        }
+
+        let showScore = () => {
+            let score = Object.values(ans).reduce((sum,el) => { return sum += Number(el) },0);
+            console.log(score);
+            return <div><span>your score: {score}</span> <button >Restart Quiz</button></div> 
+        }
+        return (
+            <div>
+                <form>
+                {
+                    questions.map((element) =>{
+                        return (
+                            <>
+                                <p>Q.{element.id} {element.question}</p>
+                                <ol>
+                                {
+                                    element.options.map((el) => {
+                                        return (
+                                                <li>
+                                                    <input type="checkbox" onChange={(e) => {handleAns(e)}} name={element.id} value= {el===element.rightAns?1:0}/>
+                                                    <label htmlFor={element.id}>{el}</label>
+                                                </li>
+                                            )
+                                    
+                                    })
+                                
+                                }
+                                </ol>
+                            </>
+                        )
+                    })
+                }
+                <button type="submit" onSubmit={showScore}>Submit</button>
+                </form>
+            </div>
+        )
+    }
+
+    let App = () => {
+        return (
+            <>
+                <Welcome title={"Welcome to React Quiz"} />
+                <Quiz/>
+            </>
+        )
+    }
+    let root = ReactDOM.createRoot(document.getElementById("root"));
+    root.render(<Quiz />)
+  </script>
+</html>

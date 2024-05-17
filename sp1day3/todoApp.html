@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Template</title>
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+  <script src="https://www.unpkg.com/react@18.2.0/umd/react.development.js"></script>
+  <script src="https://www.unpkg.com/react-dom@18.2.0/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script type="text/babel">
+    // Your  code will go here
+    const App = () => {
+        const initialTodoState = {
+            id:Date.now()+Math.random() *100 +"title",
+            title:"",
+            priority:"High",
+            status:"Pending",
+            dueDate:"Not Available"
+        }
+        
+        const [todo,setTodo] = React.useState(initialTodoState);
+        const [allTodos,setAllTodos] = React.useState([]);
+
+        const addTodo = (e) => {
+            setTodo({
+                ...todo,
+                [e.target.name]:e.target.value,
+            })
+        }
+
+        const submitForm = (e) => {
+            e.preventDefault();
+            setAllTodos([
+                ...allTodos,
+                todo
+            ])
+            setTodo(initialTodoState);
+        }
+
+        const removeTodo = (e,id) => {
+            let newAllTodos = allTodos.filter((element) =>element.id !== e.target.value);
+            setAllTodos(newAllTodos);
+            console.log("removed:"+e.target.value);
+        }
+        
+        const filter = (e,id) => {
+            let newAllTodos = allTodos.filter((element) =>element.priority === e.target.value);
+            setAllTodos(newAllTodos);
+            console.log("filtered:"+e.target.value);
+        }
+
+        console.log(todo);
+        console.log(allTodos);
+        return(
+            <>
+            <Todo addTodo={addTodo} submitForm={submitForm}/>
+            <RenderTodo allTodos={allTodos} removeTodo={removeTodo} filter={filter}/>
+            </>
+        ) 
+            
+    }
+
+    const RenderTodo = ({allTodos,removeTodo,filter}) => {
+        const filter = (e,id) => {
+            let newAllTodos = allTodos.filter((element) =>element.priority === e.target.value);
+            setAllTodos(newAllTodos);
+            console.log("filtered:"+e.target.value);
+        }
+        
+        return(
+            <div><div>
+                    <label htmlFor="status">Status</label>
+                    <option name="status">
+                        <select value="Pending" onChange={filter}>Pending</select>
+                        <select value="Completed" onChange={filter}>Completed</select>
+                    </option>
+                    <label htmlFor="priority">priority</label>
+                    <select name="priority">
+                        <option value="High" onChange={filter}>High</option>
+                        <option value="Low" onChange={filter}>Low</option>
+                    </select>
+                </div>
+                <ul>
+                {
+                    allTodos.map((element)=>{
+                        return (
+                            <li key={element.id}>
+                                <span>{element.title}</span>
+                                <span>{element.priority}</span>
+                                <span>{element.status}</span>
+                                <span>{element.dueDate}</span>
+                                <button onClick={removeTodo} value={element.id}>Remove</button>
+                            </li>
+                        )
+                    })
+                }
+                </ul>
+            </div>
+        )
+    }
+
+    const Todo = ({addTodo,submitForm}) => {
+        return (
+            <div>
+                <form action="#">
+                <input type="text" name="title" onChange={addTodo} placeholder="Add New Task"/>
+                <label htmlFor="priority" onChange={addTodo}>Priority: </label>
+                <select id="priority" name="priority" onChange={addTodo} defaultValue="High">
+                    <option id="High" value="High">High</option>
+                    <option id="Low" value="Low">Low</option>
+                </select>
+                <label htmlFor="status" >Status: </label>
+                <select id="status" name="status" onChange={addTodo} defaultValue="Pending">
+                    <option value="Pending">Pending</option>
+                    <option value="Completed">Completed</option>
+                </select>
+                <input type="date" name="dueDate" onChange={addTodo}/>
+                <input type="submit" onClick={submitForm} value="Add Todo"/>
+                </form>
+            </div>
+        )
+    }
+    let root = ReactDOM.createRoot(document.getElementById("root"));
+    root.render(<App/>)
+  </script>
+</html>
