@@ -1,15 +1,29 @@
-import { useState } from 'react'
-import './App.css'
-import { Counter } from './Counter'
+// App.jsx
+import { useState } from "react";
+import {Navbar} from "./Navbar";
+import Main from "./Main";
+import Footer from "./Footer";
+import "./App.css";
 
-function App() {
-  const [count, setCount] = useState(0)
+export function ThemeContextProvider({ children }) {
+  const [theme, setTheme] = React.useState("white");
+  return (
+    <ThemeContext.Provider value={{ theme, setTheme}}>
+      {children}
+    </ThemeContext.Provider>
+  );
+}
+
+const App = () => {
+  const isLoggedIn = useState(true);
 
   return (
     <>
-      <Counter/>
+      <Navbar />
+      <Main isLoggedIn={isLoggedIn} />
+      <Footer />
     </>
-  )
+  );
 }
 
-export default App
+export default App;
