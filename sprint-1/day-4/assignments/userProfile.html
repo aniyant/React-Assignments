@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Profiles Dynamic Search</title>
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+  <script src="https://www.unpkg.com/react@18.2.0/umd/react.development.js"></script>
+  <script src="https://www.unpkg.com/react-dom@18.2.0/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script type="text/babel">
+    // Your  code will go here
+    const UserProfileComponent = ({user}) => {
+        return(
+            <div className="card" style={{
+                width: "250px",
+                height: "250px",
+                margin: "10px",
+                padding: "10px",
+                backgroundColor:"#f7f8fa",
+                // color:"red",
+                textAlign: "center",
+                boxSizing: "border-box",
+                cursor: "pointer",
+                borderRadius: "10px",
+                border:"3px ridge black",
+                boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
+                fontSize: "25px"
+            }}>
+                <p>Name: {user.name}</p>
+                <p>Age: {user.age}</p>
+                <p>Location: {user.location}</p>
+            </div>
+        )
+    }
+
+    const App = () => {
+        const initialUsers = [
+                                { id: 1, name: "Alice", age: 25, location: "New York" },
+                                { id: 2, name: "Bob", age: 30, location: "San Francisco" },
+                                { id: 3, name: "Charlie", age: 35, location: "Los Angeles" },
+                                { id: 4, name: "David", age: 28, location: "Chicago" },
+                                { id: 5, name: "Eve", age: 22, location: "Seattle" },
+                                { id: 1, name: "Alice", age: 25, location: "New York" },
+                                { id: 2, name: "Bob", age: 30, location: "San Francisco" },
+                                { id: 3, name: "Charlie", age: 35, location: "Los Angeles" },
+                                { id: 4, name: "David", age: 28, location: "Chicago" },
+                                { id: 5, name: "Eve", age: 22, location: "Seattle" }
+                            ]
+        const [users,setUsers] = React.useState(initialUsers);
+
+        const [serchTerm,setSerchTerm] = React.useState('');
+
+        let filteredUsers = users.filter((user) =>{
+            return user.name.toLowerCase().includes(serchTerm.toLowerCase());
+        })
+
+        return (
+            <>
+            <div style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                flexDirection: "column",
+                margin: "50px auto",
+                padding: "20px",
+                backgroundColor:"#f7f8fa",
+            }}>
+                <label htmlFor="searchTerm"><h1>Enter Name</h1></label>
+                <input type="text" style={{height:"50px",width:"500px",borderRadius: "5px",fontSize: "20px",padding:"5px"}}
+                id="searchTerm" placeholder="Type name to search profile" value={serchTerm} onChange={(e) => setSerchTerm(e.target.value)} />
+            </div>
+            <div style={{
+                width: "100%",
+                display: "flex",
+                flexWrap: "wrap",
+                justifyContent: "space-evenly",
+                alignItems: "center",
+                gap:"30px",
+                width: "fit-content",
+                margin: "auto",
+                padding: "20px",
+            }}>
+                {
+                    filteredUsers.map((user) => {
+                        return <UserProfileComponent user={user} />
+                    })
+                }
+            </div>
+            </>
+        )
+    }
+
+    let root = ReactDOM.createRoot(document.getElementById("root"));
+    root.render(<App />);
+  </script>
+</html>

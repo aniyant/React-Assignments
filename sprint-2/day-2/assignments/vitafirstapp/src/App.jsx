@@ -1,0 +1,200 @@
+import { useState } from 'react'
+import './App.css'
+
+const AddTodo = ({allTodos,setAllTodos}) => {
+  const initialStateTodo = () => {
+      return {
+          id:Date.now()+Math.random()*1000,
+          title: "",
+          priority: "Low",
+          status: false,
+          dueDate: "Not Assigned",
+      }
+  }
+  
+  const [todo, setTodo] = useState(initialStateTodo);
+
+  const handleChange = (e) => {
+      const {name,type} = e.target;
+
+      let value = type === "checkbox" ? e.target.checked : e.target.value;
+      setTodo({
+         ...todo,
+          [name]: value,
+      })
+  }
+
+  const addNewTodo = (e) => {
+      e.preventDefault();
+      if(todo.title){
+          setAllTodos([...allTodos,todo]);
+          setTodo(initialStateTodo);
+      }
+      else{
+          alert("Title is required");
+      }
+  }
+  console.log(todo);
+  return (
+      <div>
+          <form style={{
+              display:"flex",
+              justifyContent:"space-evenly",
+              alignItems:"center",
+              width:"100%",
+              marginTop:"20px",
+              marginBottom:"20px",
+          }}>
+          <label htmlFor="title">Title: </label>
+          <input name="title" id="title" type="text" onChange={handleChange} value={todo.title}  placeholder="Enter Todo Title" required/>
+          <label htmlFor="priority">Priority: </label>
+          <select name="priority" id="priority" onChange={handleChange} value={todo.priority}>
+              <option value="High">High</option>
+              <option value="Medium">Medium</option>
+              <option value="Low">Low</option>
+          </select>
+          <label htmlFor="status">Status: </label>
+          <input type="checkbox" name="status" id="status" onChange={handleChange} checked={todo.status}/>
+          <label htmlFor="dueDate">Due Date: </label>
+          <input type="date" name="dueDate" onChange={handleChange}/>
+          <button type="submit" onClick={addNewTodo}>Add</button>
+          </form>
+      </div>
+  )
+}
+
+const RenderTodos = ({allTodos,setAllTodos,filterStatus}) => {
+  const handleStatus = (e,id) => {
+      const newTodos = allTodos.map((todo) => {
+          if(todo.id === id){
+              todo.status = e.target.checked;
+          }
+          return todo;
+      })
+      setAllTodos(newTodos);
+  }
+
+  const deleteTodo = (e,id) => {
+      const newTodos = allTodos.filter((todo) => todo.id !==  id);
+      setAllTodos(newTodos);
+  }
+
+  return (
+      <div style={{
+          width:"100%",
+          marginTop:"20px",
+          marginBottom:"20px",
+      }}>
+          <table style={{
+          width:"100%",
+          marginTop:"20px",
+          marginBottom:"20px",
+          border:"1px ridge",
+          textAlign:"center",
+      }}>
+              <thead>
+                  <tr style={{
+                      border:"1px ridge",
+                      textAlign:"center",
+                  }}>
+                      <th>Title</th>
+                      <th>Priority</th>
+                      <th>Status</th>
+                      <th>Due Date</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  {allTodos.map((todo,index) => {
+                      if(filterStatus !== "All"){
+                          if(todo.status != filterStatus){
+                              return null;
+                          }
+                      }
+                      return (
+                          <tr key={todo.id} style={{
+                                  border:"1px ridge",
+                                  textAlign:"center",
+                              }}>
+                              <td>{todo.title}</td>
+                              <td>{todo.priority}</td>
+                              <td><input type="checkbox" name="status" onChange={(e)=>handleStatus(e,todo.id)} checked={todo.status}/></td>
+                              <td>{todo.dueDate}</td>
+                              <td><button onClick={(e)=>{deleteTodo(e,todo.id)}}>Delete</button></td>
+                          </tr>
+                      )
+                  })}
+              </tbody>
+          </table>
+      </div>
+  )
+}
+const FilterTodo = ({filterStatus,setFilter}) => {
+
+  return (
+      <div style={{
+          width:"100%",
+          marginTop:"20px",
+          marginBottom:"10px",
+          display:"flex",
+          justifyContent:"center",
+          alignItems:"center"
+      }}>
+          <label style={{padding:"15px"}} htmlFor="filterStatus">Filter By Status: </label>
+          <select name="filterStatus" id="filterStatus" onChange={(e) => setFilter(e.target.value)} value={filterStatus}>
+              <option value="All">All</option>
+              <option value="1">Completed</option>
+              <option value="0">Pending</option>
+          </select>
+      </div>
+  )
+}
+
+const App = () => {
+  const [allTodos, setAllTodos] = useState([]);
+  console.log(allTodos);
+  const [filterStatus,setFilter] = useState("All");
+  // let filteredTodos;
+  // if(filter.filterStatus && filter.filterPriority) {
+  //     filterTodos = allTodos.filter((todo) => {
+  //         if(todo.status === filter.filterStatus && todo.priority === filter.filterPriority){
+  //             return todo;
+  //         }
+  //     })
+  // }
+  // else if(filter.filterStatus) {
+  //     filteredTodos = allTodos.filter((todo) => {
+  //         if(todo.status === filter.filterStatus){
+  //             return todo;
+  //         }
+  //     })
+  // }
+  // else if(filter.filterPriority){
+  //     filteredTodos = allTodos.filter((todo) => {
+  //         if(todo.priority === filter.filterPriority){
+  //             return todo;
+  //         }
+  //     })
+  // }
+
+  return (
+      <div style={{
+          display: "flex",
+          fontSize: "16px",
+          flexDirection: "column",
+          width: "1000px",
+          margin: "50px auto",
+          border: "1px solid black",
+          borderRadius: "10px",
+          boxShadow: "5px 5px 5px 5px grey",
+          backgroundColor: "white",
+          boxSizing: "border-box"
+      }}> <h2 style={{textAlign:"center"}}>Welcome to Todo Application</h2>
+          <AddTodo allTodos={allTodos} setAllTodos={setAllTodos}/>
+          <FilterTodo filter={filterStatus} setFilter={setFilter}/>
+       
+          <RenderTodos allTodos={allTodos} setAllTodos={setAllTodos} filterStatus={filterStatus}/>
+      </div>
+  )
+}
+
+export default App

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Template</title>
+    <link href="./styles.css" rel="stylesheet"/>
+  </head>
+  <body>
+    <div id="root" class="container"></div>
+  </body>
+  <script src="https://www.unpkg.com/react@18.2.0/umd/react.development.js"></script>
+  <script src="https://www.unpkg.com/react-dom@18.2.0/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script type="text/babel">
+
+    // Your  code will go here
+    const baseUrl = "https://dbioz2ek0e.execute-api.ap-south-1.amazonaws.com/mockapi/get-products";
+
+    //Pagination Component
+    const Pagination = ({page,setPage}) => {
+        return(
+            <div id="pagination">
+                <button onClick={()=>{setPage((prev) => prev-1)}} disabled={page===1}>Previous</button>
+                <button onClick={()=>{setPage((prev) => prev+1)}}>Next</button>                
+            </div>
+        )
+    }
+
+    // Product Card Component render the product
+    const ProductCard = ({curPage,product, cart, addToCart,removeFromCart}) => {
+        // console.log(curPage==="home");
+        return(
+            <div id="card" key={product.id}>
+                <img src={product.image} alt="Image not available"/>
+                <h3>{product.title}</h3>
+                <p>{product.brand}</p>
+                <p>{product.brand}</p>
+                <p>{product.category}</p>
+                <p>{product.price}</p>
+                <div>
+                {   //conditional rendering for buttons
+                    curPage === "home"?<button onClick={(e)=>{addToCart(e,product)}}>Add To Cart</button>:<button onClick={(e)=>{removeFromCart(e,product.id)}}>Remove From Cart</button>
+                }
+                </div>
+            </div>    
+        )
+    }
+
+    // Cart product List Component renders a list of products available in cart
+    const CartList = ({curPage,cart,removeFromCart}) => {
+        return (
+            <>
+            <h2>Products From Cart</h2>
+            <div id="productsList">
+                {
+                    cart.map((product) => {
+                        return <ProductCard curPage={curPage} product={product} removeFromCart={removeFromCart}/>
+                    })
+                }
+            </div>
+            </>
+        )
+    }
+
+    // ProductList Component renders a list of products
+    const ProductList = ({curPage, addToCart}) => {
+        const [page,setPage] = React.useState(1);
+
+        const [products,setProducts] = React.useState([]);
+
+        // use.State helps in maintaining sync with the api data
+        React.useEffect(()=>{
+            fetchProducts(page);
+        },[page]);
+
+        // fetch products from the api
+        const fetchProducts = async (page) => {
+            try{
+                let response = await axios.get(baseUrl,{
+                    params:{page,limit:5}
+                });
+                console.log(response.data.data);
+                setProducts(response.data.data);
+                console.log(products);
+            }
+            catch(error){
+                console.log("Error in fetchProducts: "+ error.message);
+            }
+        }
+        // console.log(curPage);
+
+        // console.log(products);
+        return (
+            <>
+            <h2>Products</h2>
+            <div id="productsList">
+                {   // product list rendering
+                    products.map((product) => {
+                        return <ProductCard curPage={curPage} product={product} addToCart={addToCart}/>
+                    })
+                }
+            </div>
+            {   // Pagination
+                curPage=="home"?<Pagination page={page} setPage={setPage}/>:null
+            }
+            </>
+        )
+    }   
+
+    // App Component 
+    const App = () => {
+        const [curPage,setCurPage] = React.useState("home");
+        const [cart,setCart] = React.useState([]);
+
+        //function to set items in cart
+        const addToCart = (e,product) => {
+            setCart([...cart,product]);
+            console.log(cart);
+        }
+
+        //function to remove items from cart
+        const removeFromCart = (e,id) => {
+            setCart(cart.filter((item)=>item.id !== id));
+        }
+
+        return(
+            <>
+            <h1>Welcome To E-commerce</h1>
+            <nav>
+                <button onClick={(e)=>setCurPage("home")}>Home</button>
+                <button onClick={(e)=>setCurPage("cart")}>Cart ({cart.length})</button>
+            </nav>
+            <main>
+                {   // conditional rendering based on current page page selection by the user
+                    curPage === "home"?<ProductList curPage={curPage} addToCart={addToCart}/>
+                        : <CartList curPage={curPage} cart={cart} removeFromCart={removeFromCart}/>
+                }
+                
+            </main>
+            </>
+        )
+    }
+
+    let root = ReactDOM.createRoot(document.getElementById("root"));
+    root.render(<App/>)
+  </script>
+</html>

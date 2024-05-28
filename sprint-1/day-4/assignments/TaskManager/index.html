@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Template</title>
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+  <script src="https://www.unpkg.com/react@18.2.0/umd/react.development.js"></script>
+  <script src="https://www.unpkg.com/react-dom@18.2.0/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script type="text/babel">
+
+    // Your  code will go here
+    
+    const RenderSingleTodo = ({todo,updateTask,deleteTask}) => {
+        const [isEditing,setIsEditing] = React.useState(false);
+        const [task,setTask] = React.useState(todo);
+        console.log(task);
+        const handleUpdate = (e) => {
+            updateTask(task.id,task);
+            setIsEditing(false);
+        }
+        return (
+            <div className={`task ${task.isCompleted ? 'completed':''}`}>
+                {
+                    isEditing ? (
+                        <div>
+                            <input type="text" name="title" value={task.title} onChange={(e) => setTask({...task,[e.target.name]:e.target.value})} />
+                            <select name="assignee" value={task.assignee} id="assignee" onChange={(e) => setTask({...task,[e.target.name]:e.target.value})}>
+                                <option value="Iron Man" defaultValue>Iron Man</option>
+                                <option value="Super Man">Super Man</option>
+                                <option value="Bat Man">Bat Man</option>
+                                <option value="Spider Man">Spider Man</option>
+                            </select>
+                            <input type="checkbox" name="isCompleted" checked={task.isCompleted} onChange={(e) => setTask({...task,[e.target.name]:e.target.checked})} />
+                            <button onClick={handleUpdate}>Update Task</button>
+                            <button onClick={() => setIsEditing(false)}>Cancel</button>
+                        </div>
+                    ):(
+                        <div>
+                            <span stye={{textDecoration:task.isCompleted?"line-through":"none"}}>{task.title}</span>
+                            <span>{task.assignee}</span>
+                            <input type="checkbox" name="isCompleted" checked={task.isCompleted} onChange={(e) => {setTask({...task,[e.target.name]:e.target.checked});handleUpdate(e)}} />
+                            <button onClick={() => setIsEditing(true)}>Edit Task</button>
+                            <button onClick={() => deleteTask(task.id)}>Delete Task</button>
+                        </div>
+                    )
+                }
+            </div>
+        )
+    }
+
+    const RenderAllTodos = ({allTask,updateTask,deleteTask}) => {
+        console.log("rendering tasks...");
+
+        return (
+            <div>
+                <h1>Rendering Response</h1>
+                {
+                    allTask.map((task) =>{
+                        console.log(task.id);
+                        return <RenderSingleTodo key={task.id} todo={task} updateTask={updateTask} deleteTask={deleteTask} />;
+                    })
+
+                }
+            </div>
+        )
+    }
+
+    const Form = ({addTask}) => {
+        const initialTask = () =>{
+            return {
+                title:"",
+                isCompleted:false,
+                assignee:"",
+            }
+        }
+        const [task,setTask] = React.useState(initialTask);
+
+        const handleChange =(e) =>{
+            let {name,type} = e.target;
+            let value = type === "checkbox"? e.target.checked : e.target.value;
+            setTask({
+               ...task,
+                [name]:value,
+            })
+        }
+        
+        return <div>
+            <form onSubmit={(e) => addTask(e,task) }>
+            <label htmlFor="title">Title</label>
+            <input type="text" id="title" name="title" onChange={handleChange} value={task.title} placeholder="Add New Task" required/>
+            <label htmlFor="assignee">Assignee :</label>
+            <select name="assignee" id="assignee" onChange={handleChange}>
+                <option value="Iron Man" defaultValue>Iron Man</option>
+                <option value="Super Man">Super Man</option>
+                <option value="Bat Man">Bat Man</option>
+                <option value="Spider Man">Spider Man</option>
+            </select>
+            <label htmlFor="isCompleted">Is Completed :</label>
+            <input type="checkbox" name="isCompleted" onChange={handleChange} checked={task.checked} />
+            <button type="submit">Add Task</button>
+            </form>
+        </div>
+    }
+    const App = () => {
+        const baseUrl = "http://localhost:8080/todos";
+
+        const [allTask,setAllTask] = React.useState([]);
+    
+        React.useEffect(() => {
+            fetchAllTasks();
+            }, []);
+
+        const fetchAllTasks = async () => {
+            const response = await axios.get(baseUrl);
+            // console.log(response);
+            setAllTask(response.data)
+        }
+        
+        const addTask = async (e,task) => {
+            e.preventDefault();
+            const response = await axios.post(baseUrl,task);
+            setAllTask(...allTask,response.data);
+        }
+
+        const updateTask = async (id,task) => {
+            try{
+                const response = await axios.put(`${baseUrl}/${id}`,task);
+                console.log(response);
+                setAllTask(allTask.map((element) => element.id === id? response.data : element));
+            }
+            catch(error) {
+                console.log("error"+error.message);
+            }
+        }
+
+        const deleteTask = async (id) => {
+              console.log(id);
+              try{
+                await axios.delete(`http://localhost:8080/todos/${id}`);
+                setAllTask(allTask.filter(task => task.id !== id));
+              }
+              catch(error){
+                console.log(error);
+              }
+      
+            };
+        
+        return <div>
+                <Form addTask={addTask}/>
+                <RenderAllTodos allTask={allTask} updateTask= {updateTask} deleteTask={updateTask}/>
+               
+            </div>
+    }
+    const root = ReactDOM.createRoot(document.getElementById("root"));
+    root.render(<App/>)
+  </script>
+</html>

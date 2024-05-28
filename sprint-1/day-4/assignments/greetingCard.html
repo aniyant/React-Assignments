@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Template</title>
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+  <script src="https://www.unpkg.com/react@18.2.0/umd/react.development.js"></script>
+  <script src="https://www.unpkg.com/react-dom@18.2.0/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script type="text/babel">
+    // Your  code will go here
+    const GreetingCard  = ({greeting,name}) => {
+        return <h3>{greeting}, {name}</h3>
+    }
+
+    const AddGreetingCard = ({setGreetings,names}) =>{
+        const [newName,setNewName] = React.useState("");
+
+        let handleChange  = (e) => {
+            setNewName(e.target.value);
+        }
+        const addNewName = () =>{
+            setGreetings([...names,newName]);
+            setNewName("");
+        }
+        return (
+            <div style={{
+                margin:"auto",
+                padding:"10px",
+                margin:"10px",
+                backgroundColor:"#f3fafa",
+                border:"2px solid ##c0cad5",
+                borderRadius:"2px",
+                boxShadow:"0px 0px 10px 0px #c0cad5"
+            }}>
+            <div style={{
+                width:"300px",
+                margin:"auto",
+            }}>
+                <input type="text" onChange={handleChange} value = {newName}/>
+                <button type="button" onClick={addNewName}>Add New Name</button>
+            </div>
+            </div>
+        )
+    }
+
+    const App = () => {
+        const [names,setGreetings] = React.useState(["John Doe", "Sunny Kumar", "Avinash Kumar"]);
+        const [title,setTitle] = React.useState('Happy Birthday');
+
+        return (
+            <>
+            <AddGreetingCard setGreetings={setGreetings} names={names}/>
+            <div style={{
+                display:"flex",
+                flexDirection:"row",
+                flexWrap:"wrap",
+                justifyContent:"space-evenly",
+                alignItems:"center",
+                padding:"10px",
+                margin:"10px",
+                backgroundColor:"#f3fafa",
+                border:"2px solid ##c0cad5",
+                borderRadius:"2px",
+                boxShadow:"0px 0px 10px 0px #c0cad5"
+            }}>
+                {
+                    names.map((name,index) => {
+                        return <div 
+                                    style={{ padding:"10px",
+                                            margin:"10px",
+                                            backgroundColor:"#f3fafa",
+                                            border:"2px solid ##c0cad5",
+                                            borderRadius:"2px",
+                                            boxShadow:"0px 0px 10px 0px #c0cad5"
+                                        }}
+                                >
+                                <GreetingCard greeting={title} name={name} key={index} />
+                                </div>
+                    })
+                }
+            </div>
+            </>
+        )
+    }
+    let root = ReactDOM.createRoot(document.getElementById("root"));
+    root.render(<App />);
+
+  </script>
+</html>
