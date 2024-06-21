@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>React Template</title>
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+  <script src="https://www.unpkg.com/react@18.2.0/umd/react.development.js"></script>
+  <script src="https://www.unpkg.com/react-dom@18.2.0/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    function useDebounce(value, delay) {
+      const [debouncedValue, setDebouncedValue] = useState(value);
+
+      useEffect(() => {
+        const handler = setTimeout(() => {
+          setDebouncedValue(value);
+        }, delay);
+
+        return () => {
+          clearTimeout(handler);
+        };
+      }, [value, delay]);
+
+      return debouncedValue;
+    }
+
+    let data = [
+      { name: 'sunny', location: 'jalandhar' },
+      { name: 'pankaj', location: 'delhi' },
+      { name: 'shubham', location: 'jalandhar' },
+      { name: 'visal', location: 'punjab' },
+      { name: 'amrit', location: 'ludhiana' },
+      { name: 'rahul', location: 'mumbai' },
+      { name: 'ajay', location: 'bangalore' },
+      { name: 'vikas', location: 'chennai' },
+      { name: 'deepak', location: 'kolkata' },
+      { name: 'manish', location: 'jaipur' },
+      { name: 'ankit', location: 'pune' },
+      { name: 'arjun', location: 'hyderabad' },
+      { name: 'naveen', location: 'chandigarh' },
+      { name: 'ravi', location: 'amritsar' },
+      { name: 'sandeep', location: 'bhopal' },
+      { name: 'abhishek', location: 'agra' },
+      { name: 'prateek', location: 'meerut' },
+      { name: 'rohit', location: 'kanpur' },
+      { name: 'sumit', location: 'lucknow' },
+      { name: 'ashish', location: 'patna' },
+      { name: 'ankur', location: 'ranchi' },
+      { name: 'deepesh', location: 'raipur' },
+      { name: 'gaurav', location: 'gwalior' },
+      { name: 'mohit', location: 'bhubaneswar' },
+      { name: 'rakesh', location: 'surat' },
+      { name: 'vishal', location: 'vadodara' },
+      { name: 'prashant', location: 'indore' },
+      { name: 'saurabh', location: 'varanasi' },
+      { name: 'tarun', location: 'jodhpur' },
+      { name: 'yogesh', location: 'dehradun' }
+    ];
+
+    function App() {
+      const [searchTerm, setSearchTerm] = useState('');
+      const debouncedSearchTerm = useDebounce(searchTerm, 300);
+      const [usersData, setUsersData] = useState(data);
+
+      let filtered = usersData.filter((user) => {
+        return user.name.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) || user.location.toLowerCase().includes(debouncedSearchTerm.toLowerCase());
+      });
+
+      return (
+        <>
+          <div style={{ maxWidth: "500px", margin: "auto" }}>
+            <div>
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="search"
+              />
+            </div>
+            <div>
+              {filtered.map((user, index) => {
+                return (
+                  <div key={index}>
+                    <p>Name: {user.name}</p>
+                    <p>Location: {user.location}</p>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </>
+      );
+    }
+
+    let reactRoot = ReactDOM.createRoot(document.getElementById("root"));
+    reactRoot.render(<App />);
+  </script>
+</html>
